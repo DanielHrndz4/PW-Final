@@ -17,8 +17,6 @@ const MainScreen = () => {
             description: "Accede a tus calificaciones de manera rápida y segura.",
             options: [
                 { label: "Ver Notas", path: "/ver-notas" },
-                { label: "Historial de Notas", path: "/historial-notas" },
-                { label: "Promedio Semestre", path: "/promedio-semestre" }
             ],
             id: 'notas',
         },

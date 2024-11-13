@@ -4,7 +4,7 @@ import { RiArrowDownDoubleLine, RiArrowUpDoubleLine } from "react-icons/ri";
 import { IoMdLogOut, IoIosArrowForward  } from "react-icons/io";
 import { SiAbbrobotstudio } from "react-icons/si";
 import { FaScroll } from "react-icons/fa6";
-import { MdOutlineMail } from "react-icons/md";
+import { MdKeyboardDoubleArrowRight, MdOutlineMail } from "react-icons/md";
 
 export const BOOK = ()=>{
     return <FaBook />
@@ -16,6 +16,10 @@ export const BOTTOM_ARROW = ()=>{
 
 export const UP_ARROW = ()=>{
     return <RiArrowUpDoubleLine />
+}
+
+export const RIGHT_ARROW = ()=>{
+    return <MdKeyboardDoubleArrowRight />
 }
 
 export const LOGOUT = ()=>{

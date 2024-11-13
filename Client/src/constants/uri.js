@@ -1,0 +1,1 @@
+export const URI_FRONT ='http://localhost:5173'
