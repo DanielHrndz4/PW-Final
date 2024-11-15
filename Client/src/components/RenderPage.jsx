@@ -8,7 +8,7 @@ const RenderPage = ({ component }) => {
       <header className="bg-gray-900">
         <Navbar />
       </header>
-      <main className="flex-grow bg-blue-50">
+      <main className="flex-grow">
         {component}
       </main>
       <footer className="w-full">

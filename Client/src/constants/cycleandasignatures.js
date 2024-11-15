@@ -92,6 +92,66 @@ export const cyclesAndAsignatures = [
             },
           ],
         },
+        {
+          name: "Desarrollo de Aplicaciones Móviles",
+          section: "01",
+          evaluations: [
+            {
+              type: "Examen 1",
+              grade: "8.0",
+              date: "2024-07-05",
+              weight: 20.0,
+            },
+            {
+              type: "Taller 1",
+              grade: "8.5",
+              date: "2024-07-10",
+              weight: 20.0,
+            },
+            {
+              type: "Examen 2",
+              grade: "7.8",
+              date: "2024-07-15",
+              weight: 30.0,
+            },
+            {
+              type: "Proyecto Final",
+              grade: "9.2",
+              date: "2024-07-20",
+              weight: 30.0,
+            },
+          ],
+        },
+        {
+          name: "Arquitectura de Software",
+          section: "02",
+          evaluations: [
+            {
+              type: "Examen 1",
+              grade: "7.5",
+              date: "2024-07-12",
+              weight: 20.0,
+            },
+            {
+              type: "Taller 1",
+              grade: "9.1",
+              date: "2024-07-15",
+              weight: 20.0,
+            },
+            {
+              type: "Examen 2",
+              grade: "8.4",
+              date: "2024-07-18",
+              weight: 30.0,
+            },
+            {
+              type: "Proyecto Final",
+              grade: "9.0",
+              date: "2024-07-22",
+              weight: 30.0,
+            },
+          ],
+        },
       ],
     },
     {
