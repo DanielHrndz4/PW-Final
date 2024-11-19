@@ -13,6 +13,7 @@ import { RoleProvider } from "./provider/RoleProvider";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { AuthProvider } from "./provider/AuthContext";
 import Login from "./pages/login/Login";
+import UploadNotes from "./pages/upload-notes/UploadNotes";
 
 function App() {
   return (
@@ -23,7 +24,14 @@ function App() {
             <Route index element={<Home />} />
 
             <Route path="/login" element={<Login />} />
-
+            {/* <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          /> */}
             <Route
               path="/ver-notas"
               element={
@@ -53,6 +61,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["teacher", "admin"]}>
                   <ViewStudents />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/subir-notas"
+              element={
+                <ProtectedRoute allowedRoles={["teacher", "admin"]}>
+                  <UploadNotes />
                 </ProtectedRoute>
               }
             />
