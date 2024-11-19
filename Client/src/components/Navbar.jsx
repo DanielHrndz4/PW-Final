@@ -22,7 +22,7 @@ const Navbar = () => {
     };
 
     return (
-        <div className="w-[90%] mx-auto flex justify-between items-center py-4 px-6 bg-gray-900 rounded-lg shadow-lg">
+        <div className="w-full lg:w-[90%] mx-auto gap-4 flex flex-col md:flex-row  justify-center md:justify-between items-center py-4 px-6 bg-gray-900 rounded-lg shadow-lg">
             <div className="flex items-center gap-4">
                 <span className="text-4xl text-yellow-400 font-bold">{BOOK()}</span>
                 <h1 className="text-3xl font-semibold text-white tracking-wider">

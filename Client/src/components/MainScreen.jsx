@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import Paragraph from '../utils/Paragraph';
 import { FORWARD } from '../utils/Icons';
 import { cyclesAndAsignatures } from '../constants/cycleandasignatures';
+import { useRole } from '../provider/RoleProvider';
 
 const MainScreen = () => {
     const [activeSection, setActiveSection] = useState(null);
     const [newGradesNotification, setNewGradesNotification] = useState(true);
     const [greeting, setGreeting] = useState(true);
-    const [role, setRole] = useState('teacher'); 
+    const { role } = useRole();
 
     const actualCycle = "01/2024";
 
@@ -31,7 +32,7 @@ const MainScreen = () => {
     };
 
     useEffect(() => {
-        hiUser('Daniel');  // Llamamos a la función con el nombre de "Daniel"
+        hiUser('Daniel');
     }, []);
 
     const items = [
@@ -42,7 +43,7 @@ const MainScreen = () => {
                 { label: "Ver Notas", path: "/ver-notas" },
             ],
             id: 'notas',
-            roles: ['student'],  // Solo los estudiantes pueden ver esta sección
+            roles: ['student'],
         },
         {
             title: "Solicitudes",
@@ -52,7 +53,7 @@ const MainScreen = () => {
                 { label: "Nueva Solicitud", path: "/nueva-solicitud" }
             ],
             id: 'solicitudes',
-            roles: ['student'],  // Solo el rol de 'student' puede ver esta sección
+            roles: ['student'],
         },
         {
             title: "Gestión de Personas",
@@ -64,7 +65,7 @@ const MainScreen = () => {
                 { label: "Agregar Alumnos", path: "/agregar-alumno" }
             ],
             id: 'gestion-personas',
-            roles: ['admin'],  // Solo el rol de 'admin' puede ver esta sección
+            roles: ['admin'],
         },
         {
             title: "Materias y Alumnos",
@@ -73,7 +74,7 @@ const MainScreen = () => {
                 { label: "Ver Alumnos Inscritos", path: "/ver-alumnos-inscritos" },
             ],
             id: 'materias-alumnos',
-            roles: ['teacher', 'admin'],  // Los roles de 'teacher' y 'admin' pueden ver esta sección
+            roles: ['teacher', 'admin'],
         },
         {
             title: "Subida de Notas",
@@ -82,11 +83,10 @@ const MainScreen = () => {
                 { label: "Subir Notas", path: "/subir-notas" }
             ],
             id: 'subida-notas',
-            roles: ['teacher', 'admin'],  // Solo los roles de 'teacher' y 'admin' pueden ver esta sección
+            roles: ['teacher', 'admin'],
         }
     ];
 
-    // Filtrar los elementos según el rol actual
     const filteredItems = items.filter(item => item.roles.includes(role));
 
     return (
@@ -110,38 +110,50 @@ const MainScreen = () => {
             )}
 
             {/* Resumen de Notas */}
-            <div className="max-w-8xl bg-white p-8 rounded-lg shadow-2xl mb-10 transition-all duration-500">
-                <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6 transition-all duration-500">
-                    Resumen de Calificaciones Ciclo {actualCycle}
-                </h2>
-                <div className="flex flex-wrap gap-6 transition-all duration-500">
-                    {cyclesAndAsignatures
-                        .filter(cycle => cycle.cycle === `Ciclo ${actualCycle}`)
-                        .flatMap(cycle => cycle.subjects)
-                        .slice(0, 6)
-                        .map((subject, index) => {
-                            const totalGrade = subject.evaluations.reduce((acc, evaluation) => {
-                                return acc + (evaluation.grade !== null ? evaluation.grade * (evaluation.weight / 100) : 0);
-                            }, 0).toFixed(1);
-                            const maxGrade = 10.0;
+            {/* Condición basada en el rol */}
+            {role === 'student' ? (
+                <div className="max-w-8xl bg-white p-8 rounded-lg shadow-2xl mb-10 transition-all duration-500">
+                    <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6 transition-all duration-500">
+                        Resumen de Calificaciones Ciclo {actualCycle}
+                    </h2>
+                    <div className="flex flex-wrap justify-center lg:justify-start gap-y-6 gap-x-6 transition-all duration-500 w-full">
+                        {cyclesAndAsignatures
+                            .filter(cycle => cycle.cycle === `Ciclo ${actualCycle}`)
+                            .flatMap(cycle => cycle.subjects)
+                            .slice(0, 6)
+                            .map((subject, index) => {
+                                const totalGrade = subject.evaluations.reduce((acc, evaluation) => {
+                                    return acc + (evaluation.grade !== null ? evaluation.grade * (evaluation.weight / 100) : 0);
+                                }, 0).toFixed(1);
+                                const maxGrade = 10.0;
 
-                            const gradeColor = totalGrade > 6 ? 'text-green-600' : 'text-red-600';
+                                const gradeColor = totalGrade > 6 ? 'text-green-600' : 'text-red-600';
 
-                            return (
-                                <div
-                                    key={index}
-                                    className="bg-gray-50 hover:bg-gray-100 justify-between flex flex-col p-4 rounded-lg shadow-xl transition-all duration-300 text-center hover:cursor-pointer transform hover:scale-105 min-w-[120px] max-w-[200px]">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 overflow-hidden">
-                                        {subject.name}
-                                    </h3>
-                                    <p className="text-xl text-gray-600 mt-2">
-                                        Total: <span className={`${gradeColor} font-bold`}>{totalGrade}</span>/{maxGrade}
-                                    </p>
-                                </div>
-                            );
-                        })}
+                                return (
+                                    <div
+                                        key={index}
+                                        className="bg-gray-50 hover:bg-gray-100 flex flex-col items-center justify-between p-4 rounded-lg shadow-xl transition-all duration-300 text-center hover:cursor-pointer transform hover:scale-105 w-full sm:w-[150px] md:w-[180px] lg:w-[200px]">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 overflow-hidden">
+                                            {subject.name}
+                                        </h3>
+                                        <p className="text-xl text-gray-600 mt-2">
+                                            Total: <span className={`${gradeColor} font-bold`}>{totalGrade}</span>/{maxGrade}
+                                        </p>
+                                    </div>
+                                );
+                            })}
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className="max-w-8xl bg-white p-8 rounded-lg shadow-2xl mb-10 transition-all duration-500">
+                    <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6 transition-all duration-500">
+                        Acceso Rápido para {role === 'teacher' ? 'Maestros' : 'Administradores'}
+                    </h2>
+                    <p className="text-gray-700 text-center">
+                        Aquí puedes gestionar solicitudes, materias y otros recursos relacionados con tu rol.
+                    </p>
+                </div>
+            )}
 
             {/* Opciones de menú */}
             <div className="w-full max-w-5xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 transition-all duration-500">
