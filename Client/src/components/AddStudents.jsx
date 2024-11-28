@@ -8,7 +8,6 @@ const AddStudentsComponent = () => {
         firstName: "",
         lastName: "",
         email: "",
-        phoneNumber: "",
         gradeLevel: "",
     });
 
@@ -31,8 +30,10 @@ const AddStudentsComponent = () => {
             return;
         }
 
+        console.log(studentData); 
+
         try {
-            const response = await fetch("/api/add-student", {
+            const response = await fetch("http://localhost:5000/api/students", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -41,7 +42,7 @@ const AddStudentsComponent = () => {
             });
 
             if (response.ok) {
-                navigate("/ver-estudiantes");
+                navigate("./ViewStudentsAdmin");
             } else {
                 throw new Error("Error al agregar el estudiante.");
             }
@@ -95,18 +96,6 @@ const AddStudentsComponent = () => {
                             onChange={handleChange}
                             className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">Número de teléfono:</label>
-                        <input
-                            type="tel"
-                            id="phoneNumber"
-                            name="phoneNumber"
-                            value={studentData.phoneNumber}
-                            onChange={handleChange}
-                            className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         />
                     </div>
 

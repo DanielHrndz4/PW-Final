@@ -14,9 +14,19 @@ const ViewTeacherComponent = () => {
     const [editingTeacher, setEditingTeacher] = useState(null);
 
     useEffect(() => {
-        // Simula una llamada a una API para obtener los maestros
-        setTeachers(mockTeachers);
+        const fetchTeachers = async () => {
+            try {
+                const response = await fetch("/api/teachers");  // Asegúrate de que esta ruta sea la correcta
+                const data = await response.json();
+                setTeachers(data);
+            } catch (error) {
+                console.error("Error al obtener los profesores:", error);
+            }
+        };
+        
+        fetchTeachers();
     }, []);
+    
 
     const handleDelete = (id) => {
         setTeachers((prev) => prev.filter((teacher) => teacher.id !== id));
