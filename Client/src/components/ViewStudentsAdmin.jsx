@@ -108,16 +108,18 @@ const ViewStudentComponent = () => {
                                 <td className="px-6 py-3 border-b">
                                     <button
                                         onClick={() => handleEdit(student)}
-                                        className="bg-yellow-500 text-white px-4 py-2 rounded-md mr-2"
+                                        className="bg-blue-900 text-white px-4 py-2 rounded-md mr-2 font-medium hover:bg-blue-800 transition-colors"
                                     >
                                         Editar
                                     </button>
+
                                     <button
                                         onClick={() => handleDelete(student._id)}
-                                        className="bg-red-500 text-white px-4 py-2 rounded-md"
+                                        className="bg-red-600 text-white px-4 py-2 rounded-md font-medium hover:bg-red-700"
                                     >
                                         Eliminar
                                     </button>
+
                                 </td>
                             </tr>
                         ))}
@@ -173,10 +175,12 @@ const ViewStudentComponent = () => {
 
                         <button
                             onClick={handleSave}
-                            className="bg-green-500 text-white px-6 py-2 rounded-md mt-4"
+                            className="bg-blue-900 text-white px-6 py-2 rounded-md mt-4 font-medium text-sm hover:bg-blue-800 transition-colors"
                         >
                             Guardar Cambios
                         </button>
+
+
                     </div>
                 )}
             </div>

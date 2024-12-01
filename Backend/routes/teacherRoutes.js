@@ -1,59 +1,55 @@
 const express = require("express");
 const Teacher = require("../models/Teacher");
+
 const router = express.Router();
 
-
-router.post('/', async (req, res) => {
-  const { firstName, lastName, email, phoneNumber, subject } = req.body;
-
-  if (!firstName || !lastName || !email || !subject) {
-      return res.status(400).json({ message: "Todos los campos son obligatorios." });
-  }
-
+// Crear un nuevo profesor
+router.post("/", async (req, res) => {
   try {
-      const newTeacher = new Teacher({ firstName, lastName, email, phoneNumber, subject });
-      await newTeacher.save();
-      res.status(201).json(newTeacher);
+    const newTeacher = new Teacher(req.body);
+    const savedTeacher = await newTeacher.save();
+    res.status(201).json(savedTeacher);
   } catch (error) {
-      res.status(500).json({ message: "Error al agregar el profesor.", error: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
-
+// Obtener todos los profesores
 router.get("/", async (req, res) => {
   try {
     const teachers = await Teacher.find();
     res.status(200).json(teachers);
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener los profesores", error });
+    res.status(500).json({ error: error.message });
   }
 });
 
+// Actualizar un profesor por ID
 router.put("/:id", async (req, res) => {
-  const { id } = req.params;
-  const { firstName, lastName, email, phoneNumber, subject } = req.body;
-
   try {
-    const updatedTeacher = await Teacher.findByIdAndUpdate(
-      id,
-      { firstName, lastName, email, phoneNumber, subject },
-      { new: true }
-    );
-    res.status(200).json({ message: "Profesor actualizado", updatedTeacher });
+    const updatedTeacher = await Teacher.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!updatedTeacher) {
+      return res.status(404).json({ error: "Profesor no encontrado" });
+    }
+    res.status(200).json(updatedTeacher);
   } catch (error) {
-    res.status(400).json({ message: "Error al actualizar el profesor", error });
+    res.status(400).json({ error: error.message });
   }
 });
 
-
+// Eliminar un profesor por ID
 router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
-
   try {
-    await Teacher.findByIdAndDelete(id);
-    res.status(200).json({ message: "Profesor eliminado" });
+    const deletedTeacher = await Teacher.findByIdAndDelete(req.params.id);
+    if (!deletedTeacher) {
+      return res.status(404).json({ error: "Profesor no encontrado" });
+    }
+    res.status(200).json({ message: "Profesor eliminado correctamente" });
   } catch (error) {
-    res.status(400).json({ message: "Error al eliminar el profesor", error });
+    res.status(500).json({ error: error.message });
   }
 });
 

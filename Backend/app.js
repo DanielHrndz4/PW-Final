@@ -1,37 +1,42 @@
-// app.js
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
 const bodyParser = require("body-parser");
-const studentRoutes = require("./routes/studentRoutes");
+const cors = require("cors"); // Importar cors
+
 const teacherRoutes = require("./routes/teacherRoutes");
+const studentRoutes = require("./routes/studentRoutes");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
-// Configuración de CORS
-const corsOptions = {
-  origin: 'http://localhost:5173', // Asegúrate de poner la URL de tu frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-  allowedHeaders: ['Content-Type'], // Encabezados permitidos
-};
-
-// Middleware
-app.use(cors(corsOptions));
+// Middleware para manejar JSON y CORS
 app.use(bodyParser.json());
-
-// Conexión a la base de datos
-mongoose
-  .connect("mongodb+srv://admin:admin@cluster0.okajjyr.mongodb.net/?retryWrites=true&w=majority", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Cambia esto si tu frontend está en otra URL
   })
-  .then(() => console.log("Conectado a la base de datos MongoDB"))
-  .catch((error) => console.error("Error conectando a la base de datos:", error));
+);
+
+// Conectar a MongoDB
+mongoose
+  .connect(
+    "mongodb+srv://admin:admin@cluster0.okajjyr.mongodb.net/?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
+  .then(() => console.log("Conectado a MongoDB"))
+  .catch((err) => console.log("Error al conectar a MongoDB:", err));
 
 // Rutas
+app.use("/api/teachers", teacherRoutes);
 app.use("/api/students", studentRoutes);
-app.use("/api/teachers", teacherRoutes); // Añadir las rutas de profesores
+
+// Ruta base
+app.get("/", (req, res) => {
+  res.send("Servidor corriendo");
+});
 
 // Iniciar servidor
 app.listen(PORT, () => {

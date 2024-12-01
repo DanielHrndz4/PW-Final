@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RenderPage from "./RenderPage";
 import Navigator from "./Navigator";
+//import ViewStudentsAdmin from "../components/ViewStudentsAdmin";
 
 const AddStudentsComponent = () => {
     const [studentData, setStudentData] = useState({
@@ -42,7 +43,7 @@ const AddStudentsComponent = () => {
             });
 
             if (response.ok) {
-                navigate("./ViewStudentsAdmin");
+                navigate("./ViewEstudentsAdmin");
             } else {
                 throw new Error("Error al agregar el estudiante.");
             }
