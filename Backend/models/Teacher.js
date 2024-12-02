@@ -8,6 +8,7 @@ const teacherSchema = new mongoose.Schema({
   phoneNumber: { type: String },
   subject: { type: String, required: true },
   password: { type: String, required: true },
+  role: { type: String, default: 'teacher' },  // Campo de role con valor por defecto
 });
 
 // Middleware para encriptar la contraseña antes de guardar

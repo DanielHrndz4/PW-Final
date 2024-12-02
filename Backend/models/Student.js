@@ -7,6 +7,7 @@ const studentSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   gradeLevel: { type: String, required: true },
   password: { type: String, required: true },  // Agregamos el campo de contraseña
+  role: { type: String, default: 'student' },  // Campo de role con valor por defecto
 });
 
 // Encriptar la contraseña antes de guardarla
