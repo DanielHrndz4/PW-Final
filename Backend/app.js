@@ -5,6 +5,8 @@ const cors = require("cors"); // Importar cors
 
 const teacherRoutes = require("./routes/teacherRoutes");
 const studentRoutes = require("./routes/studentRoutes");
+const routerLogin = require("./routes/auth");
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,7 +15,8 @@ const PORT = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "http://localhost:5173", // Cambia esto si tu frontend está en otra URL
+    origin: "http://localhost:5173",
+    credentials: true, // Cambia esto si tu frontend está en otra URL
   })
 );
 
@@ -21,10 +24,6 @@ app.use(
 mongoose
   .connect(
     "mongodb+srv://admin:admin@cluster0.okajjyr.mongodb.net/?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
   )
   .then(() => console.log("Conectado a MongoDB"))
   .catch((err) => console.log("Error al conectar a MongoDB:", err));
@@ -32,6 +31,7 @@ mongoose
 // Rutas
 app.use("/api/teachers", teacherRoutes);
 app.use("/api/students", studentRoutes);
+app.use("/api", routerLogin);
 
 // Ruta base
 app.get("/", (req, res) => {

@@ -38,23 +38,27 @@ const Login = () => {
 
     try {
       // Enviar credenciales sanitizadas al servidor
-      const response = await fetch("/api/login", {
+      const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-Token": "CSRF_TOKEN", // Token CSRF
         },
+        credentials: "include",
         body: JSON.stringify({
           email: sanitizeInput(credentials.email),
           password: sanitizeInput(credentials.password),
         }),
       });
-
+    
       if (response.ok) {
         const data = await response.json();
-        login(data.user);  // Guardar los datos del usuario en el contexto de Auth
-        setRole(data.user.role);  // Guardar el rol en el contexto de Role
-        navigate("/dashboard");
+        localStorage.setItem("user", JSON.stringify(data.user)); // Guardar los datos del usuario en el contexto de Auth
+        setRole(data.user.role); // Guardar el rol en el contexto de Role
+    
+        // Persistir el rol en localStorage
+        localStorage.setItem("role", JSON.stringify(data.user.role));
+    
+        navigate("/");
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message || "Correo o contraseña incorrectos.");
@@ -62,7 +66,7 @@ const Login = () => {
     } catch (error) {
       setErrorMessage("Ocurrió un error. Inténtalo de nuevo.");
     }
-  };
+  }   
 
   return (
     <div className="flex min-h-screen">
