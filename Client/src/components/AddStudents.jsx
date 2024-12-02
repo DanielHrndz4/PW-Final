@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RenderPage from "./RenderPage";
 import Navigator from "./Navigator";
-//import ViewStudentsAdmin from "../components/ViewStudentsAdmin";
 
 const AddStudentsComponent = () => {
     const [studentData, setStudentData] = useState({
@@ -10,6 +9,7 @@ const AddStudentsComponent = () => {
         lastName: "",
         email: "",
         gradeLevel: "",
+        password: "",  // Añadimos el campo de contraseña
     });
 
     const [errorMessage, setErrorMessage] = useState("");
@@ -26,12 +26,10 @@ const AddStudentsComponent = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!studentData.firstName || !studentData.lastName || !studentData.email || !studentData.gradeLevel) {
+        if (!studentData.firstName || !studentData.lastName || !studentData.email || !studentData.gradeLevel || !studentData.password) {
             setErrorMessage("Todos los campos son obligatorios.");
             return;
         }
-
-        console.log(studentData); 
 
         try {
             const response = await fetch("http://localhost:5000/api/students", {
@@ -107,6 +105,19 @@ const AddStudentsComponent = () => {
                             id="gradeLevel"
                             name="gradeLevel"
                             value={studentData.gradeLevel}
+                            onChange={handleChange}
+                            className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            value={studentData.password}
                             onChange={handleChange}
                             className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required

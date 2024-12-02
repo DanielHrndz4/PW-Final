@@ -3,7 +3,7 @@ const Student = require("../models/Student");
 
 const router = express.Router();
 
-
+// Obtener todos los estudiantes
 router.get("/", async (req, res) => {
   try {
     const students = await Student.find();
@@ -13,11 +13,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-
+// Crear un nuevo estudiante
 router.post("/", async (req, res) => {
-    const { firstName, lastName, email, gradeLevel } = req.body;
+    const { firstName, lastName, email, gradeLevel, password } = req.body;  // Asegúrate de obtener la contraseña
     try {
-        const newStudent = new Student({ firstName, lastName, email, gradeLevel });
+        const newStudent = new Student({ firstName, lastName, email, gradeLevel, password });  // Añadimos el campo password
         await newStudent.save();
         res.status(201).json(newStudent);
     } catch (error) {
@@ -26,24 +26,25 @@ router.post("/", async (req, res) => {
     }
 });
 
-
+// Editar un estudiante
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { firstName, lastName, email, gradeLevel } = req.body;
+  const { firstName, lastName, email, gradeLevel, password } = req.body;
 
   try {
-    const updatedStudent = await Student.findByIdAndUpdate(
-      id,
-      { firstName, lastName, email, gradeLevel }, 
-      { new: true } 
-    );
+    const updatedStudentData = { firstName, lastName, email, gradeLevel };
+    if (password) {
+      updatedStudentData.password = password;  // Si se pasa una nueva contraseña, la actualizamos
+    }
+
+    const updatedStudent = await Student.findByIdAndUpdate(id, updatedStudentData, { new: true });
     res.status(200).json(updatedStudent);
   } catch (error) {
     res.status(400).json({ error: "Error al editar el estudiante." });
   }
 });
 
-
+// Eliminar un estudiante
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 

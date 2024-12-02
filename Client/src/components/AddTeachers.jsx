@@ -9,6 +9,7 @@ const AddTeachersComponent = () => {
         lastName: "",
         email: "",
         subject: "",
+        password: "", // Añadido el campo de contraseña
     });
 
     const [errorMessage, setErrorMessage] = useState("");
@@ -25,7 +26,7 @@ const AddTeachersComponent = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!teacherData.firstName || !teacherData.lastName || !teacherData.email || !teacherData.subject) {
+        if (!teacherData.firstName || !teacherData.lastName || !teacherData.email || !teacherData.subject || !teacherData.password) {
             setErrorMessage("Todos los campos son obligatorios.");
             return;
         }
@@ -104,6 +105,19 @@ const AddTeachersComponent = () => {
                             id="subject"
                             name="subject"
                             value={teacherData.subject}
+                            onChange={handleChange}
+                            className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            value={teacherData.password}
                             onChange={handleChange}
                             className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required

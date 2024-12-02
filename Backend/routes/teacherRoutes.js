@@ -3,16 +3,27 @@ const Teacher = require("../models/Teacher");
 
 const router = express.Router();
 
+
+
 // Crear un nuevo profesor
 router.post("/", async (req, res) => {
   try {
-    const newTeacher = new Teacher(req.body);
+    const { firstName, lastName, email, subject, password } = req.body;
+
+    if (!password) {
+      return res.status(400).json({ error: "La contraseña es obligatoria." });
+    }
+
+    const newTeacher = new Teacher({ firstName, lastName, email, subject, password });
     const savedTeacher = await newTeacher.save();
     res.status(201).json(savedTeacher);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
+
+// Otros endpoints siguen igual
+
 
 // Obtener todos los profesores
 router.get("/", async (req, res) => {
