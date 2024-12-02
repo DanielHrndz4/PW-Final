@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../provider/AuthContext";
+import { useRole } from "../../provider/RoleProvider";
+
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -8,6 +11,8 @@ const Login = () => {
   });
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const { setRole } = useRole();
 
   // Sanitizar las entradas del usuario
   const sanitizeInput = (value) => {
@@ -46,6 +51,9 @@ const Login = () => {
       });
 
       if (response.ok) {
+        const data = await response.json();
+        login(data.user);  // Guardar los datos del usuario en el contexto de Auth
+        setRole(data.user.role);  // Guardar el rol en el contexto de Role
         navigate("/dashboard");
       } else {
         const errorData = await response.json();
@@ -106,22 +114,6 @@ const Login = () => {
                 placeholder="********"
                 required
               />
-            </div>
-
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="rememberMe"
-                  className="h-4 w-4 text-blue-500 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="rememberMe"
-                  className="ml-2 text-sm text-gray-700"
-                >
-                  Recuérdame
-                </label>
-              </div>
             </div>
 
             <button
