@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(userData)); // Guardar en localStorage
   };
 
-  const logout = () => {
+  const logout = () => {  
     setUser(null); // Limpiar el estado del usuario
     localStorage.removeItem('user'); // Eliminar del localStorage
   };
@@ -31,4 +31,4 @@ export const useAuth = () => {
     throw new Error('useAuth debe usarse dentro de un AuthProvider');
   }
   return context;
-};
+};  

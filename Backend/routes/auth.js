@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Student = require("../models/Student");
 const Teacher = require("../models/Teacher");
+const User = require("../models/User");
 
 const router = express.Router();
 
@@ -10,19 +11,21 @@ const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "tu_clave_secreta";
 const JWT_EXPIRES_IN = "1d"; // Tiempo de expiración del token
 
+// Endpoint de login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    let user = await Student.findOne({ email }) || await Teacher.findOne({ email });
+    // Buscar el usuario en la base de datos (primero en User, luego en Student o Teacher)
+    let user = await User.findOne({ email }) || await Student.findOne({ email }) || await Teacher.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ message: "Correo o contraseña incorrectos" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
+    // Comparar la contraseña con el hash guardado en la base de datos
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
       return res.status(400).json({ message: "Correo o contraseña incorrectos" });
     }
 
@@ -45,7 +48,7 @@ router.post("/login", async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // 1 día en milisegundos
     });
 
-    res.json({ 
+    res.json({
       message: "Login exitoso",
       user: {
         email: user.email,

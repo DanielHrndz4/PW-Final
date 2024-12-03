@@ -22,16 +22,15 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route index element={<Home />} />
-
             <Route path="/login" element={<Login />} />
-            {<Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          /> }
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/ver-notas"
               element={
@@ -104,7 +103,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
             <Route path="*" element={<h1>Page not found</h1>} />
           </Routes>
         </BrowserRouter>

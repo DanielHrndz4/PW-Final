@@ -6,10 +6,15 @@ const cors = require("cors"); // Importar cors
 const teacherRoutes = require("./routes/teacherRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const routerLogin = require("./routes/auth");
+const User = require("./models/User");
+const bcrypt = require("bcryptjs"); // Cambia a bcryptjs
+
+
 
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
 
 // Middleware para manejar JSON y CORS
 app.use(bodyParser.json());
@@ -19,6 +24,34 @@ app.use(
     credentials: true, // Cambia esto si tu frontend está en otra URL
   })
 );
+
+
+const createAdminUser = async () => {
+  try {
+    const existingAdmin = await User.findOne({ email: "admin@example.com" });
+    if (!existingAdmin) {
+      const hashedPassword = await bcrypt.hash("Admin123", 10); // Contraseña encriptada
+      const adminUser = new User({
+        firstName: "Admin",
+        lastName: "User",
+        email: "admin@example.com",
+        password: hashedPassword,
+        role: "admin",
+      });
+      await adminUser.save();
+      console.log("Usuario admin creado con éxito.");
+    } else {
+      console.log("Usuario admin ya existe.");
+    }
+  } catch (error) {
+    console.error("Error al crear usuario admin:", error);
+  }
+};
+
+createAdminUser(); // Asegúrate de invocar esta función al iniciar el servidor
+
+
+
 
 // Conectar a MongoDB
 mongoose
