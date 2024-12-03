@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BOOK, BOTTOM_ARROW, CARRER, EMAIL, LOGOUT, ROLE, UP_ARROW } from '../utils/Icons';  // Asegúrate de tener el ícono de flecha hacia arriba (UP_ARROW)
+import { BOOK, BOTTOM_ARROW, CARRER, EMAIL, LOGOUT, ROLE, UP_ARROW } from '../utils/Icons';
 import Paragraph from '../utils/Paragraph';
+import { useAuth } from '../provider/AuthContext'; // Asegúrate de usar el contexto de autenticación
+import { useNavigate } from 'react-router-dom'; // Necesario para la redirección
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -8,17 +10,17 @@ const Navbar = () => {
     const arrowRef = useRef(null);
     const nameContainerRef = useRef(null);
     const [menuWidth, setMenuWidth] = useState(0);
-    const [user, setUser] = useState(null);  // Estado para almacenar los datos del usuario
+    const [user, setUser] = useState(null);
+    const { logout } = useAuth(); // Obtén la función de logout desde el contexto
+    const navigate = useNavigate(); // Para redirigir al usuario
 
     useEffect(() => {
-        // Obtener y parsear los datos del usuario desde localStorage
-        const storedUser = localStorage.getItem("user");
+        const storedUser = localStorage.getItem('user');
         if (storedUser) {
             const parsedUser = JSON.parse(storedUser);
-            setUser(parsedUser);  // Guardamos los datos del usuario en el estado
+            setUser(parsedUser);
         }
 
-        // Establecemos el ancho del menú cuando el componente se monta
         if (arrowRef.current && nameContainerRef.current) {
             const totalWidth = arrowRef.current.offsetWidth + nameContainerRef.current.offsetWidth;
             setMenuWidth(totalWidth);
@@ -27,6 +29,22 @@ const Navbar = () => {
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
+    };
+
+    const handleLogout = () => {
+        // Eliminar datos del usuario
+        localStorage.removeItem('user'); // Remover del localStorage
+        document.cookie.split(';').forEach((cookie) => {
+            const eqPos = cookie.indexOf('=');
+            const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+        });
+
+        // Llamar al contexto de logout
+        logout();
+
+        // Redirigir al usuario
+        navigate('/login');
     };
 
     return (
@@ -46,7 +64,6 @@ const Navbar = () => {
                     {isOpen ? UP_ARROW() : BOTTOM_ARROW()}
                 </div>
                 <div className="flex flex-col text-white w-max" ref={nameContainerRef}>
-                    {/* Mostrar los datos del usuario solo si están disponibles */}
                     {user && (
                         <>
                             <Paragraph paragraph={`Nombre: ${user.firstName} ${user.lastName}`} />
@@ -59,25 +76,28 @@ const Navbar = () => {
                         ref={menuRef}
                         className="absolute top-[55px] right-0 bg-gray-800 text-white p-4 rounded-sm shadow-xl"
                         style={{
-                            width: menuWidth + 100,  // Aumentar el ancho del menú
+                            width: menuWidth + 100,
                         }}
                     >
                         <ul className="flex flex-col space-y-2">
                             <li className="hover:bg-gray-700 flex flex-row items-center px-4 py-2 hover:cursor-pointer">
                                 <span className="mr-2 text-yellow-400">{CARRER()}</span>
-                                <Paragraph paragraph={`Carrera: Ingeniería de Sistemas`}/>
+                                <Paragraph paragraph={`Carrera: Ingeniería de Sistemas`} />
                             </li>
                             <li className="hover:bg-gray-700 flex flex-row items-center px-4 py-2 hover:cursor-pointer">
                                 <span className="mr-2 text-yellow-400">{ROLE()}</span>
-                                <Paragraph paragraph={`Rol: ${user?.role === 'student' ? 'Alumno/a' : 'Profesor/a'}`}/>
+                                <Paragraph paragraph={`Rol: ${user?.role === 'student' ? 'Alumno/a' : 'Profesor/a'}`} />
                             </li>
                             <li className="hover:bg-gray-700 flex flex-row items-center px-4 py-2 hover:cursor-pointer">
                                 <span className="mr-2 text-yellow-400">{EMAIL()}</span>
-                                <Paragraph paragraph={`Correo: ${user?.email}`} onClick={`mailto:${user?.email}`}/>
+                                <Paragraph paragraph={`Correo: ${user?.email}`} onClick={`mailto:${user?.email}`} />
                             </li>
-                            <li className="hover:bg-gray-700 flex flex-row items-center px-4 py-2 hover:cursor-pointer">
+                            <li
+                                className="hover:bg-gray-700 flex flex-row items-center px-4 py-2 hover:cursor-pointer"
+                                onClick={handleLogout}
+                            >
                                 <span className="mr-2 text-yellow-400">{LOGOUT()}</span>
-                                <Paragraph paragraph={`Salir`} styles={`font-semibold`}/>
+                                <Paragraph paragraph={`Salir`} styles={`font-semibold`} />
                             </li>
                         </ul>
                     </div>
