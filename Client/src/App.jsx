@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import ViewQualifications from "./pages/view-qualifications/ViewQualifications";
 import ViewRequests from "./pages/view-requests/ViewRequest";
@@ -21,17 +21,18 @@ function App() {
       <RoleProvider>
         <BrowserRouter>
           <Routes>
-            <Route index element={<Home />} />
+            {/* Redirige la raíz al login si el usuario no está autenticado */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
 
             <Route path="/login" element={<Login />} />
-            {/* <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          /> */}
+
             <Route
               path="/ver-notas"
               element={
