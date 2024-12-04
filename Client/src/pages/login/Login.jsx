@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../provider/AuthContext";
-import { useRole } from "../../provider/RoleProvider";
-
+import { useAuth } from "../../provider/AuthContext"; // Ahora también obtenemos el rol
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -12,7 +10,6 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
-  const { setRole } = useRole();
 
   // Sanitizar las entradas del usuario
   const sanitizeInput = (value) => {
@@ -30,14 +27,13 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!credentials.email || !credentials.password) {
       setErrorMessage("Por favor, ingrese su correo y contraseña.");
       return;
     }
-
+  
     try {
-      // Enviar credenciales sanitizadas al servidor
       const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: {
@@ -52,13 +48,8 @@ const Login = () => {
     
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("user", JSON.stringify(data.user)); // Guardar los datos del usuario en el contexto de Auth
-        setRole(data.user.role); // Guardar el rol en el contexto de Role
-    
-        // Persistir el rol en localStorage
-        localStorage.setItem("role", JSON.stringify(data.user.role));
-    
-        navigate("/");
+        login(data.user); // Aquí se espera que el backend devuelva 'user' y 'role'
+        navigate("/"); // Navegar a la página principal
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message || "Correo o contraseña incorrectos.");
@@ -66,8 +57,8 @@ const Login = () => {
     } catch (error) {
       setErrorMessage("Ocurrió un error. Inténtalo de nuevo.");
     }
-  }   
-
+  };
+  
   return (
     <div className="flex min-h-screen">
       <div
