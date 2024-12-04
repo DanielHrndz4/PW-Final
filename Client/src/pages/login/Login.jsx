@@ -48,7 +48,8 @@ const Login = () => {
     
       if (response.ok) {
         const data = await response.json();
-        login(data.user); // Aquí se espera que el backend devuelva 'user' y 'role'
+        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('role', JSON.stringify(data.user.role)); // Aquí se espera que el backend devuelva 'user' y 'role'
         navigate("/"); // Navegar a la página principal
       } else {
         const errorData = await response.json();

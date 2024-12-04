@@ -6,40 +6,46 @@ const AuthContext = createContext();
 // Proveedor del contexto de autenticación
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem("user");
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (error) {
+      console.error("Error parsing user from localStorage:", error);
+      return null;
+    }
   });
-  
-  // El rol se obtiene del usuario o de localStorage si no se encuentra
+
   const [role, setRole] = useState(() => {
-    const savedRole = localStorage.getItem("role");
-    return savedRole ? JSON.parse(savedRole) : null;
+    try {
+      const savedRole = localStorage.getItem("role");
+      return savedRole ? JSON.parse(savedRole) : null;
+    } catch (error) {
+      console.error("Error parsing role from localStorage:", error);
+      return null;
+    }
   });
 
   useEffect(() => {
     if (user) {
-      // Si el usuario está logueado, actualizamos el rol
       setRole(user.role);
-      localStorage.setItem('role', JSON.stringify(user.role)); // Guardamos el rol en localStorage
+      localStorage.setItem('role', JSON.stringify(user.role));
     } else {
-      setRole(null); // Si no hay usuario, el rol debe ser null
+      setRole(null);
     }
   }, [user]);
 
-  // Función para el login
   const login = (userData) => {
-    setUser(userData); // Guardamos los datos del usuario
-    localStorage.setItem('user', JSON.stringify(userData)); // Guardamos los datos en localStorage
-    setRole(userData.role); // Aseguramos que el rol también esté configurado
-    localStorage.setItem('role', JSON.stringify(userData.role)); // Guardamos el rol en localStorage
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setRole(userData.role);
+    localStorage.setItem('role', JSON.stringify(userData.role));
   };
 
-  // Función para el logout
   const logout = () => {
-    setUser(null); // Limpiamos el estado del usuario
-    setRole(null); // Limpiamos el estado del rol
-    localStorage.removeItem('user'); // Eliminamos el usuario del localStorage
-    localStorage.removeItem('role'); // Eliminamos el rol del localStorage
+    setUser(null);
+    setRole(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('role');
   };
 
   return (

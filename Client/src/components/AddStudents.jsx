@@ -41,7 +41,7 @@ const AddStudentsComponent = () => {
             });
 
             if (response.ok) {
-                navigate("./ViewEstudentsAdmin");
+                navigate("/ver-alumnos");
             } else {
                 throw new Error("Error al agregar el estudiante.");
             }

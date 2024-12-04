@@ -74,16 +74,18 @@ const Navbar = () => {
                 {isOpen && (
                     <div
                         ref={menuRef}
-                        className="absolute top-[55px] right-0 bg-gray-800 text-white p-4 rounded-sm shadow-xl"
+                        className="absolute w-full top-[55px] right-0 bg-gray-800 text-white p-4 rounded-sm shadow-xl z-10"
                         style={{
                             width: menuWidth + 100,
                         }}
                     >
-                        <ul className="flex flex-col space-y-2">
-                            <li className="hover:bg-gray-700 flex flex-row items-center px-4 py-2 hover:cursor-pointer">
-                                <span className="mr-2 text-yellow-400">{CARRER()}</span>
-                                <Paragraph paragraph={`Carrera: Ingeniería de Sistemas`} />
-                            </li>
+                        <ul className="flex flex-col space-y-2 w-full">
+                            {user.role == "student" && (
+                                <li className="hover:bg-gray-700 flex flex-row items-center px-4 py-2 hover:cursor-pointer">
+                                    <span className="mr-2 text-yellow-400">{CARRER()}</span>
+                                    <Paragraph paragraph={`Carrera: Ingeniería de Sistemas`} />
+                                </li>
+                            )}
                             <li className="hover:bg-gray-700 flex flex-row items-center px-4 py-2 hover:cursor-pointer">
                                 <span className="mr-2 text-yellow-400">{ROLE()}</span>
                                 <Paragraph paragraph={`Rol: ${user?.role === 'student' ? 'Alumno/a' : 'Profesor/a'}`} />

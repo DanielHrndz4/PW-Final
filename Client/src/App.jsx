@@ -18,7 +18,6 @@ import UploadNotes from "./pages/upload-notes/UploadNotes";
 function App() {
   return (
     <AuthProvider>
-      <RoleProvider>
         <BrowserRouter>
           <Routes>
             <Route index element={<Home />} />
@@ -106,7 +105,6 @@ function App() {
             <Route path="*" element={<h1>Page not found</h1>} />
           </Routes>
         </BrowserRouter>
-      </RoleProvider>
     </AuthProvider>
   );
 }
